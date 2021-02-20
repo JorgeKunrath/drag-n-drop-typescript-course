@@ -1,3 +1,14 @@
+// autobind decorator
+function autobind(_target: any, _methodName: string, descriptor: PropertyDescriptor) {
+  const adjDescriptor: PropertyDescriptor = {
+    configurable: true,
+    get() {
+      return descriptor.value.bind(this)
+    },
+  }
+  return adjDescriptor
+}
+
 class ProjectInput {
   templateElement: HTMLTemplateElement
   hostElement: HTMLDivElement
@@ -22,6 +33,7 @@ class ProjectInput {
     this.attach()
   }
 
+  @autobind
   private submitHandler(event: Event) {
     event.preventDefault()
     console.table([
@@ -32,7 +44,7 @@ class ProjectInput {
   }
 
   private configure() {
-    this.element.addEventListener('submit', this.submitHandler.bind(this))
+    this.element.addEventListener('submit', this.submitHandler)
   }
 
   private attach() {
